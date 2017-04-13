@@ -85,6 +85,7 @@ module Pipedrive
 
       def all(response = nil, options = {}, get_absolutely_all = false)
         res = response || get(resource_path, options)
+        options[:query] = {} if options[:query].nil?
         if res.ok?
           data = res['data'].nil? ? [] : res['data'].map{|obj| new(obj)}
           if get_absolutely_all && has_pagination?(res)
@@ -95,6 +96,10 @@ module Pipedrive
         else
           bad_response(res, options)
         end
+      end
+      
+      def absolutely_all()
+        self.all(nil, {}, true)
       end
 
       def has_pagination?(res)
